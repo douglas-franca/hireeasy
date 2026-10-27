@@ -1,8 +1,8 @@
 package postgres
 
 import (
-	"github.com/douglas-franca/hionshop/internal/modules/users/domain"
-	usersqlc "github.com/douglas-franca/hionshop/internal/modules/users/infra/postgres/sqlc"
+	"github.com/douglas-franca/hireeasy/internal/modules/users/domain"
+	usersqlc "github.com/douglas-franca/hireeasy/internal/modules/users/infra/postgres/sqlc"
 	"github.com/google/uuid"
 )
 

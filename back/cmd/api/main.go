@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/douglas-franca/hionshop/internal/app/bootstrap"
+	"github.com/douglas-franca/hireeasy/internal/app/bootstrap"
 )
 
 func main() {

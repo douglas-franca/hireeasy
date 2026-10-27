@@ -1,0 +1,33 @@
+{
+  "openapi": "3.0.3",
+  "info": {"title": "HireEasy API", "version": "v1"},
+  "paths": {
+    "/api/v1/users": {"post": {"summary": "Create user"}},
+    "/api/v1/users/me": {"get": {"summary": "Current user"}, "patch": {"summary": "Update current user"}, "delete": {"summary": "Delete current user"}},
+    "/api/v1/users/verification/confirm": {"post": {"summary": "Confirm email verification"}},
+    "/api/v1/users/me/verification": {"post": {"summary": "Resend verification email"}},
+    "/api/v1/sessions": {"post": {"summary": "Create session"}},
+    "/api/v1/sessions/current": {"delete": {"summary": "Delete current session"}},
+    "/api/v1/companies": {"post": {"summary": "Create company"}, "get": {"summary": "List my companies"}},
+    "/api/v1/companies/{companyID}": {"get": {"summary": "Get company", "parameters": [{"name":"companyID", "in":"path", "required":true, "schema":{"type":"string", "format":"uuid"}}]}}
+  },
+  "components": {
+    "securitySchemes": {"sessionCookie": {"type":"apiKey", "in":"cookie", "name":"hireeasy_session"}},
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["code", "message"],
+            "properties": {
+              "code": {"type": "string", "example": "EMAIL_NOT_VERIFIED"},
+              "message": {"type": "string", "example": "Verify your email before continuing."}
+            }
+          }
+        }
+      }
+    }
+  }
+}

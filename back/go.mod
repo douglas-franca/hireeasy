@@ -1,4 +1,4 @@
-module github.com/douglas-franca/hionshop
+module github.com/douglas-franca/hireeasy
 
 go 1.25.11
 

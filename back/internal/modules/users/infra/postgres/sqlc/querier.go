@@ -6,11 +6,19 @@ package usersqlc
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) error
+	DeleteUser(ctx context.Context, id pgtype.UUID) (int64, error)
 	FindUserByEmail(ctx context.Context, email string) (User, error)
+	FindUserByID(ctx context.Context, id pgtype.UUID) (User, error)
+	HasOwnedCompanies(ctx context.Context, userID pgtype.UUID) (bool, error)
+	SetEmailVerificationToken(ctx context.Context, arg SetEmailVerificationTokenParams) (int64, error)
+	UpdateUserName(ctx context.Context, arg UpdateUserNameParams) (int64, error)
+	VerifyEmail(ctx context.Context, emailVerificationTokenHash pgtype.Text) (User, error)
 }
 
 var _ Querier = (*Queries)(nil)

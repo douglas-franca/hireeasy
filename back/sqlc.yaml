@@ -1,7 +1,7 @@
 version: "2"
 
 sql:
-  # Users 
+  # User account persistence.
   - engine: postgresql
     schema: "db/migrations"
     queries: "internal/modules/users/infra/postgres/queries"
@@ -9,6 +9,28 @@ sql:
       go:
         package: "usersqlc"
         out: "internal/modules/users/infra/postgres/sqlc"
+        sql_package: "pgx/v5"
+        emit_json_tags: true
+        emit_interface: true
+  # Company and membership persistence.
+  - engine: postgresql
+    schema: "db/migrations"
+    queries: "internal/modules/companies/infra/postgres/queries"
+    gen:
+      go:
+        package: "companiessqlc"
+        out: "internal/modules/companies/infra/postgres/sqlc"
+        sql_package: "pgx/v5"
+        emit_json_tags: true
+        emit_interface: true
+  # Server-side session persistence.
+  - engine: postgresql
+    schema: "db/migrations"
+    queries: "internal/modules/sessions/infra/postgres/queries"
+    gen:
+      go:
+        package: "sessionssqlc"
+        out: "internal/modules/sessions/infra/postgres/sqlc"
         sql_package: "pgx/v5"
         emit_json_tags: true
         emit_interface: true

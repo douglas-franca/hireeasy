@@ -42,12 +42,133 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) error {
 	return err
 }
 
+const deleteUser = `-- name: DeleteUser :execrows
+DELETE FROM users WHERE id = $1
+`
+
+func (q *Queries) DeleteUser(ctx context.Context, id pgtype.UUID) (int64, error) {
+	result, err := q.db.Exec(ctx, deleteUser, id)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected(), nil
+}
+
 const findUserByEmail = `-- name: FindUserByEmail :one
 SELECT id, name, email, password_hash, email_verification_token_hash, email_verification_expires_at, email_verification_sent_at, email_verified, email_verified_at, password_reset_token_hash, password_reset_expires_at, password_reset_sent_at, created_at, updated_at FROM users WHERE email = $1 LIMIT 1
 `
 
 func (q *Queries) FindUserByEmail(ctx context.Context, email string) (User, error) {
 	row := q.db.QueryRow(ctx, findUserByEmail, email)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Email,
+		&i.PasswordHash,
+		&i.EmailVerificationTokenHash,
+		&i.EmailVerificationExpiresAt,
+		&i.EmailVerificationSentAt,
+		&i.EmailVerified,
+		&i.EmailVerifiedAt,
+		&i.PasswordResetTokenHash,
+		&i.PasswordResetExpiresAt,
+		&i.PasswordResetSentAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const findUserByID = `-- name: FindUserByID :one
+SELECT id, name, email, password_hash, email_verification_token_hash, email_verification_expires_at, email_verification_sent_at, email_verified, email_verified_at, password_reset_token_hash, password_reset_expires_at, password_reset_sent_at, created_at, updated_at FROM users WHERE id = $1 LIMIT 1
+`
+
+func (q *Queries) FindUserByID(ctx context.Context, id pgtype.UUID) (User, error) {
+	row := q.db.QueryRow(ctx, findUserByID, id)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Email,
+		&i.PasswordHash,
+		&i.EmailVerificationTokenHash,
+		&i.EmailVerificationExpiresAt,
+		&i.EmailVerificationSentAt,
+		&i.EmailVerified,
+		&i.EmailVerifiedAt,
+		&i.PasswordResetTokenHash,
+		&i.PasswordResetExpiresAt,
+		&i.PasswordResetSentAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const hasOwnedCompanies = `-- name: HasOwnedCompanies :one
+SELECT EXISTS (SELECT 1 FROM user_companies WHERE user_id = $1 AND role = 'owner')
+`
+
+func (q *Queries) HasOwnedCompanies(ctx context.Context, userID pgtype.UUID) (bool, error) {
+	row := q.db.QueryRow(ctx, hasOwnedCompanies, userID)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}
+
+const setEmailVerificationToken = `-- name: SetEmailVerificationToken :execrows
+UPDATE users
+SET email_verification_token_hash = $2,
+    email_verification_expires_at = $3,
+    email_verification_sent_at = now()
+WHERE id = $1
+`
+
+type SetEmailVerificationTokenParams struct {
+	ID                         pgtype.UUID        `json:"id"`
+	EmailVerificationTokenHash pgtype.Text        `json:"email_verification_token_hash"`
+	EmailVerificationExpiresAt pgtype.Timestamptz `json:"email_verification_expires_at"`
+}
+
+func (q *Queries) SetEmailVerificationToken(ctx context.Context, arg SetEmailVerificationTokenParams) (int64, error) {
+	result, err := q.db.Exec(ctx, setEmailVerificationToken, arg.ID, arg.EmailVerificationTokenHash, arg.EmailVerificationExpiresAt)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected(), nil
+}
+
+const updateUserName = `-- name: UpdateUserName :execrows
+UPDATE users SET name = $2, updated_at = now() WHERE id = $1
+`
+
+type UpdateUserNameParams struct {
+	ID   pgtype.UUID `json:"id"`
+	Name string      `json:"name"`
+}
+
+func (q *Queries) UpdateUserName(ctx context.Context, arg UpdateUserNameParams) (int64, error) {
+	result, err := q.db.Exec(ctx, updateUserName, arg.ID, arg.Name)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected(), nil
+}
+
+const verifyEmail = `-- name: VerifyEmail :one
+UPDATE users
+SET email_verified = TRUE,
+    email_verified_at = now(),
+    email_verification_token_hash = NULL,
+    email_verification_expires_at = NULL
+WHERE email_verification_token_hash = $1
+  AND email_verification_expires_at > now()
+RETURNING id, name, email, password_hash, email_verification_token_hash, email_verification_expires_at, email_verification_sent_at, email_verified, email_verified_at, password_reset_token_hash, password_reset_expires_at, password_reset_sent_at, created_at, updated_at
+`
+
+func (q *Queries) VerifyEmail(ctx context.Context, emailVerificationTokenHash pgtype.Text) (User, error) {
+	row := q.db.QueryRow(ctx, verifyEmail, emailVerificationTokenHash)
 	var i User
 	err := row.Scan(
 		&i.ID,
