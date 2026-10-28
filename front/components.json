@@ -14,11 +14,11 @@
   "rtl": false,
   "pointer": true,
   "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
-    "lib": "@/lib",
-    "composables": "@/composables"
+    "components": "@/shared/components",
+    "ui": "@/shared/ui",
+    "utils": "@/shared/lib/utils",
+    "lib": "@/shared/lib",
+    "composables": "@/shared/composables"
   },
   "menuColor": "default",
   "menuAccent": "subtle",

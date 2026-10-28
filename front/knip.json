@@ -1,0 +1,9 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "project": ["src/**/*.{ts,vue,css}"],
+  "ignoreDependencies": ["@vee-validate/zod", "vee-validate"],
+  "ignoreIssues": {
+    "src/app/i18n/index.ts": ["exports", "types"],
+    "src/shared/ui/**": ["exports", "types"]
+  }
+}

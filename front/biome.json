@@ -1,0 +1,304 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "src/**/*",
+      "!src/shared/ui",
+      "!src/assets",
+      "!src/components/HelloWorld.vue",
+      "e2e/**/*.ts",
+      "index.html",
+      "vite.config.ts",
+      "playwright.config.ts",
+      "tsconfig.json",
+      "components.json",
+      "package.json",
+      "biome.json",
+      "knip.json",
+      ".vscode/*.json"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 105,
+    "attributePosition": "auto"
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "semicolons": "asNeeded"
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    },
+    "formatter": {
+      "enabled": true,
+      "quoteStyle": "single"
+    }
+  },
+  "html": {
+    "formatter": {
+      "enabled": true
+    },
+    "experimentalFullSupportEnabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "a11y": "error",
+      "complexity": "error",
+      "correctness": "error",
+      "performance": "error",
+      "security": "error",
+      "style": "error",
+      "suspicious": "error",
+      "nursery": {
+        "noFloatingPromises": "error",
+        "noMisusedPromises": "error",
+        "useExhaustiveSwitchCases": "error",
+        "noUnsafePlusOperands": "error",
+        "noUselessTypeConversion": "error",
+        "useIncludes": "error",
+        "useStringStartsEndsWith": "error",
+        "useNullishCoalescing": "off",
+        "noNegationInEqualityCheck": "error",
+        "useAwaitThenable": "error"
+      }
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "identifierOrder": "lexicographic",
+            "sortBareImports": true,
+            "groups": [
+              [":BUN:", ":NODE:"],
+              ":BLANK_LINE:",
+              ":PACKAGE:",
+              ":BLANK_LINE:",
+              ":ALIAS:",
+              ":BLANK_LINE:",
+              ":PATH:",
+              ":BLANK_LINE:",
+              ":STYLE:"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["**"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "useImportExtensions": "off",
+            "noUndeclaredVariables": "off",
+            "useHookAtTopLevel": "off",
+            "useQwikValidLexicalScope": "off",
+            "useQwikClasslist": "off",
+            "useQwikMethodUsage": "off",
+            "noNodejsModules": "off",
+            "useImageSize": "off",
+            "noProcessGlobal": "off",
+            "noUnresolvedImports": "off"
+          },
+          "style": {
+            "useVueMultiWordComponentNames": "off",
+            "noTernary": "off",
+            "useBlockStatements": "off",
+            "useExportsLast": "off",
+            "useGlobalThis": "off",
+            "noDefaultExport": "off",
+            "noProcessEnv": "off",
+            "useExplicitLengthCheck": "off",
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["./*", "../*"],
+                    "message": "Use the @ alias instead of relative imports."
+                  }
+                ]
+              }
+            },
+            "useImportType": {
+              "level": "error",
+              "options": {
+                "style": "inlineType"
+              }
+            },
+            "useFilenamingConvention": {
+              "level": "error",
+              "options": {
+                "filenameCases": ["camelCase", "kebab-case", "export"]
+              }
+            },
+            "useNamingConvention": {
+              "level": "error",
+              "options": {
+                "strictCase": false,
+                "conventions": [
+                  {
+                    "selector": {
+                      "kind": "objectLiteralProperty"
+                    },
+                    "match": ".*"
+                  },
+                  {
+                    "selector": {
+                      "kind": "typeProperty"
+                    },
+                    "match": ".*"
+                  }
+                ]
+              }
+            }
+          },
+          "complexity": {
+            "noVoid": "off",
+            "noExcessiveCognitiveComplexity": {
+              "level": "error",
+              "options": {
+                "maxAllowedComplexity": 10
+              }
+            },
+            "noExcessiveLinesPerFunction": {
+              "level": "error",
+              "options": {
+                "maxLines": 40,
+                "skipBlankLines": true
+              }
+            },
+            "useMaxParams": {
+              "level": "error",
+              "options": {
+                "max": 4
+              }
+            }
+          },
+          "suspicious": {
+            "useStrictMode": "off",
+            "noDoubleEquals": {
+              "level": "error",
+              "options": {
+                "ignoreNull": true
+              }
+            },
+            "noConsole": {
+              "level": "error",
+              "options": {
+                "allow": ["error"]
+              }
+            },
+            "noEqualsToNull": "off"
+          },
+          "performance": {
+            "noBarrelFile": "off",
+            "noReExportAll": "off",
+            "useVueVapor": "off"
+          },
+          "security": {
+            "noSecrets": {
+              "level": "error",
+              "options": {
+                "entropyThreshold": 50
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/*.vue"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useFilenamingConvention": {
+              "level": "error",
+              "options": {
+                "filenameCases": ["PascalCase"]
+              }
+            },
+            "noRestrictedGlobals": "off"
+          },
+          "a11y": {
+            "noHeaderScope": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/app/i18n/**", "src/assets/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noExcessiveLinesPerFile": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "**/*.test.ts",
+        "e2e/**",
+        "playwright.config.ts",
+        "**/stores/**",
+        "**/composables/**"
+      ],
+      "linter": {
+        "rules": {
+          "complexity": {
+            "noExcessiveLinesPerFunction": "off"
+          },
+          "style": {
+            "noMagicNumbers": "off",
+            "noNonNullAssertion": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/shared/ui/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noDocumentCookie": "off"
+          },
+          "a11y": {
+            "useSemanticElements": "off",
+            "useFocusableInteractive": "off",
+            "useAriaPropsForRole": "off",
+            "noNoninteractiveElementInteractions": "off",
+            "useKeyWithClickEvents": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/assets/svg/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noHexColors": "off"
+          }
+        }
+      }
+    }
+  ]
+}
